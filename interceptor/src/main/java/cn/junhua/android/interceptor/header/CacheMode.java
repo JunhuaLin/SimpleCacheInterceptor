@@ -1,7 +1,13 @@
 package cn.junhua.android.interceptor.header;
 
 /**
- * 缓存方式
+ * 缓存方式：
+ * <p>
+ * 1. NO_CACHE             不使用缓存，直接请求网络<br/>
+ * 2. NORMAL               启用缓存，先请求网络再缓存结果，无网使用缓存 <br/>
+ * 3. ONLY_IF_CACHED       有缓存就优先使用缓存，没有缓存再请求网络 <br/>
+ * 3. CACHED_AFTER_REQUEST 优使用缓存，然后再请求网络缓存走normal缓存模式 <br/>
+ * </p>
  *
  * @author junhua.lin@jinfuzi.com<br/>
  * CREATED 2018/11/8 11:22
