@@ -6,6 +6,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
 
 import cn.junhua.android.app.Net.DataBean;
@@ -39,6 +43,7 @@ public class MainActivity extends Activity {
     }
 
     private void doSomething() {
+        test();
         Net net = retrofitBase.getRetrofit().create(Net.class);
         Call<DataBean> call = net.getIndex("苏州市");
         call.enqueue(new Callback<DataBean>() {
@@ -54,5 +59,31 @@ public class MainActivity extends Activity {
                 textview.setText("请求失败！");
             }
         });
+    }
+
+    public void test() {
+        try {
+            JSONObject root = new JSONObject();
+
+            root.put("q", "123");
+            JSONArray array = new JSONArray();
+            array.put("1");
+            array.put("2");
+            array.put("3");
+
+            root.put("array", array);
+
+            System.out.println(root.toString(4));
+            array = root.getJSONArray("array");
+            array.put("4");
+            array.put("5");
+            array.put("6");
+
+            System.out.println(root.toString(4));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

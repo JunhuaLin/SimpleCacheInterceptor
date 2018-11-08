@@ -1,15 +1,19 @@
-package cn.junhua.android.interceptor.Catch;
+package cn.junhua.android.interceptor.cache;
 
 import android.content.Context;
 
-import cn.junhua.android.interceptor.SmartCache;
+import cn.junhua.android.interceptor.SimpleCache;
 
 
-public class FileSmartCache implements SmartCache {
+/**
+ * 拦截器的文件缓存实现
+ * Created by junhua.lin on 2018/3/19.
+ */
+public class FileSimpleCache implements SimpleCache {
 
-    public CacheManager cacheManager;
+    private CacheManager cacheManager;
 
-    public FileSmartCache(Context context) {
+    public FileSimpleCache(Context context) {
         this.cacheManager = CacheManager.getInstance(context);
     }
 

@@ -1,8 +1,9 @@
-package cn.junhua.android.interceptor.Catch;
+package cn.junhua.android.interceptor.cache;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -15,43 +16,16 @@ import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import cn.junhua.android.interceptor.log.Log;
-
 
 public class CacheManager {
-    private ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
-
     public static final String TAG = "CacheManager";
-
     //max cache size 10mb
     private static final long DISK_CACHE_SIZE = 1024 * 1024 * 10;
-
     private static final int DISK_CACHE_INDEX = 0;
-
     private static final String CACHE_DIR = "responses";
-
-    private DiskLruCache mDiskLruCache;
-
     private volatile static CacheManager mCacheManager;
-
-    public static CacheManager getInstance(Context context) {
-        if (mCacheManager == null) {
-            synchronized (CacheManager.class) {
-                if (mCacheManager == null) {
-                    mCacheManager = new CacheManager(context);
-                }
-            }
-        }
-        return mCacheManager;
-    }
-
-
-    public void delete(Context context) throws Exception {
-        File diskCacheDir = getDiskCacheDir(context, CACHE_DIR);
-        if (mDiskLruCache != null) {
-            DiskLruCache.deleteContents(diskCacheDir);
-        }
-    }
+    private ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+    private DiskLruCache mDiskLruCache;
 
     private CacheManager(Context context) {
         File diskCacheDir = getDiskCacheDir(context, CACHE_DIR);
@@ -67,6 +41,45 @@ public class CacheManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static CacheManager getInstance(Context context) {
+        if (mCacheManager == null) {
+            synchronized (CacheManager.class) {
+                if (mCacheManager == null) {
+                    mCacheManager = new CacheManager(context);
+                }
+            }
+        }
+        return mCacheManager;
+    }
+
+    /**
+     * 对字符串进行MD5编码
+     */
+    public static String encryptMD5(String string) {
+        try {
+            byte[] hash = MessageDigest.getInstance("MD5").digest(
+                    string.getBytes("UTF-8"));
+            StringBuilder hex = new StringBuilder(hash.length * 2);
+            for (byte b : hash) {
+                if ((b & 0xFF) < 0x10) {
+                    hex.append("0");
+                }
+                hex.append(Integer.toHexString(b & 0xFF));
+            }
+            return hex.toString();
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return string;
+    }
+
+    public void delete(Context context) throws Exception {
+        File diskCacheDir = getDiskCacheDir(context, CACHE_DIR);
+        if (mDiskLruCache != null) {
+            DiskLruCache.deleteContents(diskCacheDir);
         }
     }
 
@@ -185,27 +198,6 @@ public class CacheManager {
     private File getDiskCacheDir(Context context, String uniqueName) {
         String cachePath = context.getCacheDir().getPath();
         return new File(cachePath + File.separator + uniqueName);
-    }
-
-    /**
-     * 对字符串进行MD5编码
-     */
-    public static String encryptMD5(String string) {
-        try {
-            byte[] hash = MessageDigest.getInstance("MD5").digest(
-                    string.getBytes("UTF-8"));
-            StringBuilder hex = new StringBuilder(hash.length * 2);
-            for (byte b : hash) {
-                if ((b & 0xFF) < 0x10) {
-                    hex.append("0");
-                }
-                hex.append(Integer.toHexString(b & 0xFF));
-            }
-            return hex.toString();
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return string;
     }
 
     /**
