@@ -1,7 +1,7 @@
 package cn.junhua.android.interceptor;
 
 /**
- * @author junhua.lin@jinfuzi.com<br/>
+ * @author junhua.lin<br />
  * CREATED 2018/11/8 13:58
  */
 enum CacheCode {

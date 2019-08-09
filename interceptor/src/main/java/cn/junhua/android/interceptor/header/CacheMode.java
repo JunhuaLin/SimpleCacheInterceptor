@@ -9,7 +9,7 @@ package cn.junhua.android.interceptor.header;
  * 3. CACHED_AFTER_REQUEST 优使用缓存，然后再请求网络缓存走normal缓存模式 <br/>
  * </p>
  *
- * @author junhua.lin@jinfuzi.com<br/>
+ * @author junhua.lin<br />
  * CREATED 2018/11/8 11:22
  */
 public class CacheMode {
